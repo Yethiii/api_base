@@ -3,24 +3,24 @@ const { MongoClient } = require('mongodb');
 const uri = process.env.DB_URI;
 const dbName = process.env.DB_NAME;
 
-let connect = ()=>{
-    return new Promise((resolve, reject) => {
-        const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-        client.connect((error)=>{
-            if(error){
-                console.info("[Db] Unable to connect to server: " + error);
-                reject(error)
-            } else {
-                console.info("[Db] Connected successfully to server")
-                exports.db = client.db(dbName)
-                resolve(exports.db)
-            }
-        })
-    })
-}
+let connect = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const client = new MongoClient(uri);
+            await client.connect();
 
-exports.connect = connect
-exports.db = null
+            console.info("[Db] Connected successfully to server");
 
+            const database = client.db(dbName);
+            exports.db = database;
 
+            resolve(database);
+        } catch (error) {
+            console.info("[Db] Unable to connect to server: " + error);
+            reject(error);
+        }
+    });
+};
 
+exports.connect = connect;
+exports.db = null;

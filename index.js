@@ -10,8 +10,8 @@ app.use('/', router);
 
 const port = process.env.PORT || 3001
 
-db.connect().then(
+db.connect().then(() => {
     app.listen(port, () => {
-        console.info(`[SERVER] Listening on http://localhost:${port}`); 
-    })
-) 
+        console.info(`[SERVER] Listening on http://localhost:${port}`);
+    });
+});
